@@ -1,0 +1,28 @@
+// @import '@/node_modules/bootstrap/scss/mixins';
+
+body {
+  // letter-spacing: $letter-spacing;
+  img {
+    display: block;
+    object-fit: cover;
+    width: 100%;
+  }
+}
+@include media-breakpoint-down(xl) {
+  html {
+    overflow-y: scroll;
+  }
+
+  :root {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  :root body {
+    position: absolute;
+  }
+  body {
+    width: 100vw;
+    overflow: hidden;
+  }
+}
