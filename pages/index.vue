@@ -1,7 +1,7 @@
 <template>
   <div>
     <header
-      class="d-flex justify-content-between position-fixed start-0 end-0 top-0 p-8"
+      class="d-flex justify-content-between position-fixed start-0 end-0 top-0 p-8 z-30"
     >
       <h1 class="align-self-start d-flex m-0">
         <NuxtLink to="/" class="title fs-3 tracking-2 text-decoration-none">
@@ -54,16 +54,16 @@
           </div>
         </div>
       </section>
-      <section class="north-america-panel container d-flex">
-        <div class="continent">
-          <div class="north-america-panel-bg overflow-hidden">
-            <img
-              src="@/assets/images/america-1.jpg"
-              alt="north-america"
-              class="america-img position-absolute h-100"
-            >
-            <div class="wave" />
-          </div>
+      <section class="north-america-panel continent">
+        <div class="north-america-panel-bg overflow-hidden z-10">
+          <img
+            src="@/assets/images/america-1.jpg"
+            alt="north-america"
+            class="america-img position-absolute h-100"
+          >
+          <div class="wave" />
+        </div>
+        <div class="container z-10">
           <div class="row">
             <div class="col-6 d-flex flex-column justify-content-center">
               <div class="p-8">
@@ -85,7 +85,6 @@
                       <span class="more-btn-text tracking-2">MORE</span>
                     </span>
                   </NuxtLink>
-                  <Area />
                 </div>
               </div>
             </div>
@@ -102,11 +101,11 @@
 </template>
 
 <script>
-import Area from '@/components/index/area.vue'
+// import Area from '@/components/index/area.vue'
 
 export default {
   components: {
-    Area
+    // Area
   }
 }
 </script>
@@ -234,6 +233,13 @@ export default {
     width: 100%;
     opacity: 0;
   }
+}
+.north-america-panel {
+  background: linear-gradient(
+    90deg,
+    rgb(16, 17, 31) 0%,
+    rgba(25, 26, 48, 1) 100%
+  );
 }
 .north-america-panel-bg {
   height: 100%;

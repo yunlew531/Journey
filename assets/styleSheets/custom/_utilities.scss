@@ -755,6 +755,17 @@ $utilities: map-merge(
       property: right,
       class: end,
       values: $negative-spacers
+    ),
+    'z-index': (
+      responsive: true,
+      property: z-index,
+      class: z,
+      values: (
+        0: 0,
+        10: 10,
+        20: 20,
+        30: 30
+      )
     )
   ),
   $utilities
