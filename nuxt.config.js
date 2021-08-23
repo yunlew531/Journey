@@ -1,4 +1,5 @@
 export default {
+  ssr: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'world-travel',
@@ -18,7 +19,7 @@ export default {
   css: ['@/assets/styleSheets/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '@/plugins/ckeditor.js', ssr: false }],
 
   buildModules: [
     'nuxt-purgecss',
@@ -53,5 +54,5 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 
-  serverMiddleware: [{ path: '/', handler: '@/server/index.js' }]
+  serverMiddleware: [{ path: '/', handler: '@/server/app.js' }]
 }
