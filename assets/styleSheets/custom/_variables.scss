@@ -7,7 +7,7 @@ $primary: #131424;
 $secondary: #eaf5fc;
 $white: #fff;
 $black: #111;
-$black-100: #1f2021;
+$third: #d39a01;
 // custom-end
 
 // Settings for the `<body>` element.
@@ -44,7 +44,7 @@ $theme-colors: (
   'dark': $dark,
   'white': $white,
   'black': $black,
-  'black-100': $black-100
+  'third': $third
 ) !default;
 
 // Spacing

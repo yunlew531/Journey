@@ -2,7 +2,7 @@ export default {
   ssr: true,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'world-travel',
+    title: 'JOURNEY',
     htmlAttrs: {
       lang: 'en'
     },
@@ -31,6 +31,10 @@ export default {
       }
     ]
   ],
+
+  env: {
+    API_KEY: process.env.API_KEY
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: false,

@@ -1,35 +1,29 @@
 <template>
-  <section class="north-america-panel continent position-relative">
-    <div class="north-america-panel-bg overflow-hidden z-10 m-0">
-      <ul class="list-unstyled">
-        <li
-          v-for="(continent, key) in continents.data"
-          v-show="key === continents.currentContinentIdx"
-          :key="continent.id"
-        >
+  <section class="continent-panel">
+    <ul
+      class="continent-list list-unstyled d-flex flex-nowrap overflow-hidden mb-0"
+    >
+      <li
+        v-for="continent in continents.data"
+        :key="continent.id"
+        class="continent position-relative"
+      >
+        <div class="continent-panel-bg overflow-hidden z-10 m-0">
           <img
             :src="continent.photo"
             :alt="continent.title"
             class="america-img position-absolute h-100"
           >
-        </li>
-      </ul>
-      <div class="wave" />
-    </div>
-    <div class="container z-10">
-      <ul class="list-unstyled">
-        <li
-          v-for="(continent, key) in continents.data"
-          v-show="key === continents.currentContinentIdx"
-          :key="continent.id"
-        >
+          <div class="wave" />
+        </div>
+        <div class="continent-content container z-10">
           <h2 class="title position-absolute">
             {{ continent.title }}
           </h2>
           <div class="row">
             <div class="col-6 d-flex flex-column justify-content-center">
               <div class="p-8 m-0">
-                <h2 class="fw-bold fs-1 mb-8 tracking-3">
+                <h2 class="text-third fw-bold fs-1 mb-8 tracking-3">
                   {{ continent.title }}
                 </h2>
                 <div
@@ -47,18 +41,29 @@
               </div>
             </div>
             <div class="col-6">
-              <div class="rounded bg-secondary shadow-lg p-1">
-                <img :src="continent.photo" :alt="continent.title">
+              <div
+                class="continent-img-panel rounded bg-secondary shadow-lg p-1"
+              >
+                <img
+                  :src="continent.photo"
+                  :alt="continent.title"
+                  class="continent-img"
+                >
               </div>
             </div>
           </div>
-        </li>
-      </ul>
-    </div>
+        </div>
+      </li>
+    </ul>
   </section>
 </template>
 
 <script>
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
 export default {
   props: {
     continents: {
@@ -66,22 +71,91 @@ export default {
       default: () => ({}),
       require: true
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.setScrollTrigger()
+    })
+  },
+  methods: {
+    calcMaxWidth (elems) {
+      return elems.reduce(
+        (accumulate, elem) => (accumulate += elem.offsetWidth),
+        0
+      )
+    },
+    setScrollTrigger () {
+      const sections = gsap.utils.toArray('.continent')
+      const maxWidth = this.calcMaxWidth(sections)
+      gsap.to(sections, {
+        x: () => `-${maxWidth - window.innerWidth}`,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.continent-list',
+          pin: true,
+          scrub: true,
+          snap: 1 / (sections.length - 1),
+          end: () => `+=${maxWidth}`,
+          invalidateOnRefresh: true
+        }
+      })
+      const timelines = sections.map(section =>
+        gsap.timeline(section, {
+          scrollTrigger: {
+            trigger: section,
+            start: () =>
+              'top top-=' +
+              (section.offsetLeft - window.innerWidth / 2) *
+                (maxWidth / (maxWidth - window.innerWidth)),
+            end: () =>
+              '+=' +
+              section.offsetWidth * (maxWidth / (maxWidth - window.innerWidth)),
+            toggleActions: 'restart reverse restart reverse'
+          }
+        })
+      )
+      timelines.forEach((timeline) => {
+        const titleEl = timeline.vars.querySelector('.title')
+        const imgEl = timeline.vars.querySelector('.continent-img-panel')
+        timeline
+          .to(titleEl, {
+            duration: 1,
+            y: 0,
+            opacity: 1
+          })
+          .to(
+            imgEl,
+            {
+              duration: 2,
+              x: 0,
+              opacity: 1
+            },
+            '-=1'
+          )
+      })
+    }
   }
 }
 </script>
+
+<style>
+body::-webkit-scrollbar {
+  display: none;
+}
+</style>
 
 <style lang="scss" scoped>
 @import '@/node_modules/bootstrap/scss/functions';
 @import '@/assets/styleSheets/custom/variables';
 
-.north-america-panel {
+.continent-panel {
   background: linear-gradient(
     90deg,
     rgb(16, 17, 31) 0%,
     rgba(25, 26, 48, 1) 100%
   );
 }
-.north-america-panel-bg {
+.continent-panel-bg {
   height: 100%;
   position: absolute;
   right: 0;
@@ -111,9 +185,10 @@ export default {
   letter-spacing: 3rem;
   font-family: 'Long Cang', cursive;
   color: rgba($white, 0.1);
-  transform: rotate(-5deg);
+  transform: rotate(-5deg) translateY(100%);
   left: 10%;
   bottom: 10%;
+  opacity: 0;
 }
 @keyframes dark-bright {
   0% {
@@ -128,9 +203,12 @@ export default {
   }
 }
 .continent {
+  width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 .wave {
   top: -150px;
@@ -193,5 +271,15 @@ export default {
   position: absolute;
   top: -10px;
   left: -85px;
+}
+.continent-content {
+  height: 450px;
+}
+.continent-img-panel {
+  opacity: 0;
+  transform: translateX(30%);
+}
+.continent-img {
+  height: 420px;
 }
 </style>

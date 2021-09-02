@@ -56,15 +56,18 @@
       </section>
       <Area :continents="continents" />
     </main>
+    <Footer />
   </div>
 </template>
 
 <script>
-import Area from '@/components/index/area.vue'
+import Area from '@/components/frontend/index/area.vue'
+import Footer from '@/components/frontend/footer.vue'
 
 export default {
   components: {
-    Area
+    Area,
+    Footer
   },
   async asyncData ({ $axios }) {
     let continents = {}
@@ -81,6 +84,16 @@ export default {
 
     return {
       continents
+    }
+  },
+  mounted () {
+    this.checkEnvVariable()
+  },
+  methods: {
+    checkEnvVariable () {
+      if (!process.env.API_KEY) {
+        alert('偵測不到 env 環境變數，專案無法被正確執行。請聯繫開發者!')
+      }
     }
   }
 }
