@@ -87,6 +87,7 @@ export default {
     setScrollTrigger () {
       const sections = gsap.utils.toArray('.continent')
       const maxWidth = this.calcMaxWidth(sections)
+      // sections x axis transform
       gsap.to(sections, {
         x: () => `-${maxWidth - window.innerWidth}`,
         ease: 'none',
@@ -99,24 +100,29 @@ export default {
           invalidateOnRefresh: true
         }
       })
+
+      // each section anime timeline
       const timelines = sections.map(section =>
-        gsap.timeline(section, {
+        gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: () =>
               'top top-=' +
               (section.offsetLeft - window.innerWidth / 2) *
                 (maxWidth / (maxWidth - window.innerWidth)),
+
             end: () =>
               '+=' +
               section.offsetWidth * (maxWidth / (maxWidth - window.innerWidth)),
-            toggleActions: 'restart reverse restart reverse'
+            toggleActions: 'restart reverse restart reverse',
+            onEnter () {}
           }
         })
       )
       timelines.forEach((timeline) => {
-        const titleEl = timeline.vars.querySelector('.title')
-        const imgEl = timeline.vars.querySelector('.continent-img-panel')
+        const targetSectionEl = timeline.scrollTrigger.trigger
+        const titleEl = targetSectionEl.querySelector('.title')
+        const imgEl = targetSectionEl.querySelector('.continent-img-panel')
         timeline
           .to(titleEl, {
             duration: 1,
