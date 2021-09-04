@@ -20,7 +20,7 @@
       </div>
     </header>
     <main>
-      <section class="banner">
+      <section class="banner position-relative">
         <div class="j-filter" />
         <div
           class="position-absolute text-center tracking-3 start-50 top-50 translate-middle"
