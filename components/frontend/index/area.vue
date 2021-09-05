@@ -62,8 +62,7 @@ export default {
     return {
       maxWidth: 0,
       sections: [],
-      timelines: [],
-      snapDebounce: 0
+      timelines: []
     }
   },
   mounted () {
@@ -89,9 +88,10 @@ export default {
           scrub: 1,
           snap: {
             snapTo: this.directionalSnap(1 / (this.sections.length - 1)),
-            duration: 1.5
+            duration: 1.5,
+            inertia: false,
+            ease: 'expo.out'
           },
-          inertia: false,
           end: () => `+=${this.maxWidth}`,
           invalidateOnRefresh: true
         }
@@ -101,7 +101,6 @@ export default {
         gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            pause: true,
             start: () =>
               'top top-=' +
               (section.offsetLeft - window.innerWidth / 2) *
@@ -367,11 +366,7 @@ export default {
       const snapFunc = gsap.utils.snap(increment)
       return (raw, self) => {
         const n = snapFunc(raw)
-        return n < raw === self.direction < 0
-          ? n
-          : self.direction < 0
-          ? n - increment
-          : n + increment
+        return self.direction < 0 ? n - increment : n + increment
       }
     }
   }
