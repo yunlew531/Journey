@@ -109,7 +109,6 @@ export default {
               '+=' +
               section.offsetWidth *
                 (this.maxWidth / (this.maxWidth - window.innerWidth)),
-            toggleActions: 'restart reverse restart reverse',
             invalidateOnRefresh: true,
             onEnter: (process) => {
               this.timelines[key].clear()
@@ -195,16 +194,17 @@ export default {
             },
             onEnterBack: (process) => {
               this.timelines[key].clear()
-              const wave = process.trigger.querySelector('.wave-panel')
-              const titleEl = process.trigger.querySelector('.title')
-              const continentTitleEl = process.trigger.querySelector(
+              const targetSectionEl = process.trigger
+              const wave = targetSectionEl.querySelector('.wave-panel')
+              const titleEl = targetSectionEl.querySelector('.title')
+              const continentTitleEl = targetSectionEl.querySelector(
                 '.continent-title'
               )
-              const tourContentEl = process.trigger.querySelector(
+              const tourContentEl = targetSectionEl.querySelector(
                 '.tour-content'
               )
-              const bgPhotoEl = process.trigger.querySelector('.bg-photo')
-              const moreBtn = process.trigger.querySelector('.more-btn')
+              const bgPhotoEl = targetSectionEl.querySelector('.bg-photo')
+              const moreBtn = targetSectionEl.querySelector('.more-btn')
 
               this.timelines[key]
                 .to(bgPhotoEl, {
@@ -272,90 +272,126 @@ export default {
             onLeave: (process) => {
               this.timelines[key].clear()
               const targetSectionEl = process.trigger
-              const titleEl = process.trigger.querySelector('.title')
+              const titleEl = targetSectionEl.querySelector('.title')
               const wave = targetSectionEl.querySelector('.wave-panel')
               const tourContentEl = targetSectionEl.querySelector(
                 '.tour-content'
               )
-              const moreBtn = process.trigger.querySelector('.more-btn')
+              const moreBtn = targetSectionEl.querySelector('.more-btn')
 
-              gsap.to(wave, {
-                duration: 1,
-                width: '120%'
-              })
-              gsap.to(titleEl, {
-                duration: 1,
-                y: '100%',
-                opacity: 0
-              })
-              gsap.fromTo(
-                tourContentEl,
-                {
-                  y: 0,
-                  opacity: 1
-                },
-                {
-                  opacity: 0,
-                  duration: 1,
-                  y: '100%'
-                }
-              )
-              gsap.to(moreBtn, {
-                duration: 0.2,
-                scale: 0
-              })
+              this.timelines[key]
+                .addLabel('start')
+                .to(
+                  wave,
+                  {
+                    duration: 1,
+                    width: '120%'
+                  },
+                  'start'
+                )
+                .to(
+                  titleEl,
+                  {
+                    duration: 1,
+                    y: '100%',
+                    opacity: 0
+                  },
+                  'start'
+                )
+                .fromTo(
+                  tourContentEl,
+                  {
+                    y: 0,
+                    opacity: 1
+                  },
+                  {
+                    opacity: 0,
+                    duration: 1,
+                    y: '100%'
+                  },
+                  'start'
+                )
+                .to(
+                  moreBtn,
+                  {
+                    duration: 0.2,
+                    scale: 0
+                  },
+                  'start'
+                )
             },
             onLeaveBack: (process) => {
               this.timelines[key].clear()
-              const titleEl = process.trigger.querySelector('.title')
-              const bgPhotoEl = process.trigger.querySelector('.bg-photo')
-              const wave = process.trigger.querySelector('.wave-panel')
-              const continentTitleEl = process.trigger.querySelector(
+              const targetSectionEl = process.trigger
+              const titleEl = targetSectionEl.querySelector('.title')
+              const bgPhotoEl = targetSectionEl.querySelector('.bg-photo')
+              const wave = targetSectionEl.querySelector('.wave-panel')
+              const continentTitleEl = targetSectionEl.querySelector(
                 '.continent-title'
               )
-              const tourContentEl = process.trigger.querySelector(
+              const tourContentEl = targetSectionEl.querySelector(
                 '.tour-content'
               )
-              const moreBtn = process.trigger.querySelector('.more-btn')
+              const moreBtn = targetSectionEl.querySelector('.more-btn')
 
-              gsap.to(bgPhotoEl, {
-                filter: 'brightness(0)'
-              })
-              gsap.to(titleEl, {
-                duration: 0.2,
-                y: '100%',
-                opacity: 0
-              })
-              gsap.fromTo(
-                wave,
-                {
-                  width: '500px'
-                },
-                {
-                  duration: 0.5,
-                  width: 0,
-                  x: '-80px'
-                }
-              )
-              gsap.to(tourContentEl, {
-                duration: 0.2,
-                opacity: 0,
-                y: '100%'
-              })
-              gsap.fromTo(
-                continentTitleEl,
-                {
-                  y: 0
-                },
-                {
-                  duration: 0.2,
-                  y: '100%'
-                }
-              )
-              gsap.to(moreBtn, {
-                duration: 0.2,
-                scale: 0
-              })
+              this.timelines[key]
+                .addLabel('start')
+                .to(
+                  bgPhotoEl,
+                  {
+                    filter: 'brightness(0)'
+                  },
+                  'start'
+                )
+                .to(
+                  titleEl,
+                  {
+                    duration: 0.2,
+                    y: '100%',
+                    opacity: 0
+                  },
+                  'start'
+                )
+                .fromTo(
+                  wave,
+                  {
+                    width: '500px'
+                  },
+                  {
+                    duration: 0.5,
+                    width: 0,
+                    x: '-80px'
+                  },
+                  'start'
+                )
+                .to(
+                  tourContentEl,
+                  {
+                    duration: 0.2,
+                    opacity: 0,
+                    y: '100%'
+                  },
+                  'start'
+                )
+                .fromTo(
+                  continentTitleEl,
+                  {
+                    y: 0
+                  },
+                  {
+                    duration: 0.2,
+                    y: '100%'
+                  },
+                  'start'
+                )
+                .to(
+                  moreBtn,
+                  {
+                    duration: 0.2,
+                    scale: 0
+                  },
+                  'start'
+                )
             }
           }
         })
