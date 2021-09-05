@@ -36,7 +36,7 @@
         <NuxtLink to="/" class="text-white text-decoration-none">
           <span class="more-btn border rounded-circle">
             <span class="more-btn-arrow" />
-            <span class="more-btn-text tracking-2">MORE</span>
+            <span class="more-btn-text tracking-2">我要去這裡!!</span>
           </span>
         </NuxtLink>
       </li>
@@ -530,8 +530,8 @@ body::-webkit-scrollbar {
 }
 .more-btn-text {
   position: absolute;
-  top: -10px;
-  left: -85px;
+  top: -5px;
+  left: -110px;
 }
 .continent-content {
   height: 450px;

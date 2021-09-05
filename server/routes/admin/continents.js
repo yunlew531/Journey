@@ -8,13 +8,22 @@ router.post(
   '/create',
   body('title')
     .notEmpty()
-    .withMessage('請檢查標題格式是否空白'),
+    .withMessage('請檢查標題是否空白')
+    .isString()
+    .withMessage('標題需為 string 格式'),
   body('description')
     .notEmpty()
-    .withMessage('請檢查內容是否空白'),
+    .withMessage('請檢查簡介是否空白')
+    .isString()
+    .withMessage('簡介需為 string 格式'),
   body('photo')
     .notEmpty()
     .withMessage('請檢查圖片是否空白'),
+  body('content')
+    .notEmpty()
+    .withMessage('請檢查內容是否空白')
+    .isString()
+    .withMessage('內容需為 string 格式'),
   (req, res) => {
     const errorFormatter = ({ msg }) => `${msg}`
     const errors = validationResult(req).formatWith(errorFormatter)
@@ -42,16 +51,130 @@ router.post(
       .then(() => {
         res.send({
           success: true,
-          message: '洲地區新增成功'
+          message: '地區新增成功'
         })
       })
       .catch((err) => {
         res.status(400).send({
           success: false,
-          message: '請求失敗，資料無法新增至資料庫'
+          message: '請求失敗，資料無法新增'
         })
       })
   }
 )
+
+router.post(
+  '/update/:id',
+  body('title')
+    .notEmpty()
+    .withMessage('請檢查標題是否空白')
+    .isString()
+    .withMessage('標題需為 string 格式'),
+  body('description')
+    .notEmpty()
+    .withMessage('請檢查簡介是否空白')
+    .isString()
+    .withMessage('簡介需為 string 格式'),
+  body('photo')
+    .notEmpty()
+    .withMessage('請檢查圖片是否空白'),
+  body('content')
+    .notEmpty()
+    .withMessage('請檢查內容是否空白')
+    .isString()
+    .withMessage('內容需為 string 格式'),
+  (req, res) => {
+    const { id } = req.params
+    const continent = req.body
+
+    const errorFormatter = ({ msg }) => `${msg}`
+    const errors = validationResult(req).formatWith(errorFormatter)
+    const hasError = !errors.isEmpty()
+
+    if (hasError) {
+      res.status(400).send({
+        success: false,
+        message: errors.array()
+      })
+      return
+    }
+
+    continentsRef
+      .doc(id)
+      .get()
+      .then((snapshot) => {
+        if (!snapshot.exists) {
+          throw new Error('not exists')
+        } else {
+          return continentsRef.doc(id).update(continent)
+        }
+      })
+      .then(() => {
+        res.send({
+          success: true,
+          message: '成功更新內容'
+        })
+      })
+      .catch((err) => {
+        const success = false
+        let status = 500
+        let message = ''
+
+        switch (err.message) {
+          case 'not exists':
+            status = 400
+            message = '資料不存在，請檢查id'
+            break
+          default:
+            message = '請求失敗，資料無法更新'
+        }
+
+        res.status(status).send({
+          success,
+          message
+        })
+      })
+  }
+)
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params
+
+  continentsRef
+    .doc(id)
+    .get()
+    .then((snapshot) => {
+      if (!snapshot.exists) {
+        throw new Error('not exists')
+      } else {
+        return continentsRef.doc(id).delete()
+      }
+    })
+    .then(() => {
+      res.send({
+        success: true,
+        message: '成功刪除地區'
+      })
+    })
+    .catch((err) => {
+      const success = false
+      let status = 500
+      let message = ''
+
+      switch (err.message) {
+        case 'not exists':
+          status = 400
+          message = '資料不存在，請檢查id'
+          break
+        default:
+          message = '請求失敗，資料無法刪除'
+      }
+
+      res.status(status).send({
+        success,
+        message
+      })
+    })
+})
 
 module.exports = router

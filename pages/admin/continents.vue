@@ -2,25 +2,43 @@
   <div class="container">
     <input v-model="continent.title" type="text" placeholder="請輸入洲名">
     <input v-model="continent.photo" type="text" placeholder="請輸入圖片位置">
+    <select v-model="areaSelectId" @change="editContinent">
+      <option value="">
+        選擇地區
+      </option>
+      <option v-for="option in continents" :key="option.id" :value="option.id">
+        {{ option.title }}
+      </option>
+    </select>
     <client-only>
-      <ckeditor
-        v-model="continent.description"
-        :editor="editor"
-        placeholder="請輸入首頁呈現內容"
-      />
-      <ckeditor
-        v-model="continent.content"
-        :editor="editor"
-        placeholder="請輸入詳細資訊"
-      />
+      <div class="ckeditor">
+        <ckeditor
+          v-model="continent.description"
+          :editor="editor"
+          placeholder="請輸入首頁呈現內容"
+        />
+        <ckeditor
+          v-model="continent.content"
+          :editor="editor"
+          placeholder="請輸入詳細資訊"
+        />
+      </div>
     </client-only>
     <button type="button" @click="createContinent">
       新增
+    </button>
+    <button type="button" @click="updateContinent">
+      更新
+    </button>
+    <button type="button" @click="deleteContinent">
+      刪除
     </button>
   </div>
 </template>
 
 <script>
+import { apiGetContinents, apiDeleteContinent, apiUpdateContinent } from '@/api'
+
 let ClassicEditor = null
 if (process.browser) {
   ClassicEditor = require('@ckeditor/ckeditor5-build-classic')
@@ -35,10 +53,27 @@ export default {
         description: '',
         content: '',
         photo: ''
-      }
+      },
+      continents: {},
+      areaSelectId: ''
     }
   },
+  created () {
+    this.getContinents()
+  },
   methods: {
+    async getContinents () {
+      try {
+        const { data } = await apiGetContinents()
+        const obj = {}
+        data.continents.forEach((contient) => {
+          obj[contient.id] = contient
+        })
+        this.continents = obj
+      } catch (err) {
+        alert(err)
+      }
+    },
     createContinent () {
       this.$axios
         .post('/admin/continents/create', this.continent)
@@ -49,9 +84,43 @@ export default {
           const errors = err.response.data.message
           alert(errors)
         })
+    },
+    editContinent () {
+      const id = this.areaSelectId
+      this.continent.title = this.continents[id].title
+      this.continent.photo = this.continents[id].photo
+      this.continent.description = this.continents[id].description
+      this.continent.content = this.continents[id].content
+    },
+    async deleteContinent () {
+      const id = this.areaSelectId
+      if (!id) {
+        return
+      }
+      try {
+        const { data } = await apiDeleteContinent(id)
+        console.log(data)
+      } catch (err) {}
+    },
+    async updateContinent () {
+      const id = this.areaSelectId
+      if (!id) {
+        return
+      }
+      try {
+        const continent = this.continent
+        const { data } = await apiUpdateContinent(id, continent)
+        console.log(data)
+      } catch (err) {}
     }
   }
 }
 </script>
 
-<style></style>
+<style lang="scss">
+.ckeditor {
+  p {
+    color: black;
+  }
+}
+</style>

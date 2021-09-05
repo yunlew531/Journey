@@ -33,7 +33,8 @@ export default {
   ],
 
   env: {
-    API_KEY: process.env.API_KEY
+    API_KEY: process.env.API_KEY,
+    APP_URL: process.env.APP_URL
   },
 
   // Auto import components: https://go.nuxtjs.dev/config-components

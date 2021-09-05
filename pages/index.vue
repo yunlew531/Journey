@@ -63,16 +63,17 @@
 <script>
 import Area from '@/components/frontend/index/area.vue'
 import Footer from '@/components/frontend/footer.vue'
+import { apiGetContinents } from '@/api'
 
 export default {
   components: {
     Area,
     Footer
   },
-  async asyncData ({ $axios }) {
+  async asyncData () {
     let continents = {}
     try {
-      const { data } = await $axios.get(`${process.env.APP_URL}/continents/all`)
+      const { data } = await apiGetContinents()
       const { continents: resContinents, photo } = data
       continents = {
         data: resContinents,
