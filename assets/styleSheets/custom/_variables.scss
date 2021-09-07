@@ -11,8 +11,8 @@ $third: #d39a01;
 // custom-end
 
 // Settings for the `<body>` element.
-$body-bg: $primary !default;
-$body-color: $secondary !default;
+$body-bg: $white !default;
+$body-color: $primary !default;
 
 // scss-docs-start color-variables
 $gray-100: #f8f9fa !default;
@@ -104,7 +104,7 @@ $position-values: (
 // scss-docs-end position-map
 
 // negative-position
-$negative-spacers: negativify-map($spacers) !default;
+// $negative-spacers: negativify-map($spacers) !default;
 
 // Font
 //

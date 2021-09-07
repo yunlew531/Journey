@@ -3,7 +3,7 @@
     <footer class="container">
       <div class="row">
         <div class="col-4">
-          <p class="mb-4">
+          <p class="text-white mb-4">
             地址: 110台北市信義區市府路1號
           </p>
           <a

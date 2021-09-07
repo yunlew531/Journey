@@ -87,10 +87,12 @@ export default {
     },
     editContinent () {
       const id = this.areaSelectId
-      this.continent.title = this.continents[id].title
-      this.continent.photo = this.continents[id].photo
-      this.continent.description = this.continents[id].description
-      this.continent.content = this.continents[id].content
+      this.continent = {
+        title: this.continents[id].title,
+        photo: this.continents[id].photo,
+        description: this.continents[id].description,
+        content: this.continents[id].content
+      }
     },
     async deleteContinent () {
       const id = this.areaSelectId

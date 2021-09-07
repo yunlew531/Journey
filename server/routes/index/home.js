@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { firestoreDb } = require('../connections/firebase_connect')
+const { firestoreDb } = require('../../connections/firebase_connect')
 const continentsRef = firestoreDb.collection('continents')
 
 router.get('/continents/all', (req, res) => {
