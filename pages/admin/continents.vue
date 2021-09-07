@@ -37,7 +37,12 @@
 </template>
 
 <script>
-import { apiGetContinents, apiDeleteContinent, apiUpdateContinent } from '@/api'
+import {
+  apiGetContinents,
+  apiCreateContinent,
+  apiDeleteContinent,
+  apiUpdateContinent
+} from '@/api'
 
 let ClassicEditor = null
 if (process.browser) {
@@ -71,19 +76,18 @@ export default {
         })
         this.continents = obj
       } catch (err) {
-        alert(err)
+        const { message } = err.response.data
+        alert(message)
       }
     },
-    createContinent () {
-      this.$axios
-        .post('/admin/continents/create', this.continent)
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => {
-          const errors = err.response.data.message
-          alert(errors)
-        })
+    async createContinent () {
+      try {
+        const { data } = await apiCreateContinent()
+        alert(data.message)
+      } catch (err) {
+        const { message } = err.response.data
+        alert(message)
+      }
     },
     editContinent () {
       const id = this.areaSelectId
@@ -102,7 +106,10 @@ export default {
       try {
         const { data } = await apiDeleteContinent(id)
         console.log(data)
-      } catch (err) {}
+      } catch (err) {
+        const { message } = err.response.data
+        alert(message)
+      }
     },
     async updateContinent () {
       const id = this.areaSelectId
@@ -113,7 +120,10 @@ export default {
         const continent = this.continent
         const { data } = await apiUpdateContinent(id, continent)
         console.log(data)
-      } catch (err) {}
+      } catch (err) {
+        const { message } = err.response.data
+        alert(message)
+      }
     }
   }
 }

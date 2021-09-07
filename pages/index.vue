@@ -22,7 +22,6 @@ export default {
       return redirect('/home')
     }
   },
-  created () {},
   mounted () {
     this.checkEnvVariable()
   },

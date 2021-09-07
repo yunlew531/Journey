@@ -3,7 +3,7 @@
     class="d-flex justify-content-between position-fixed start-0 end-0 top-0 p-8 z-30"
   >
     <h1 class="text-white align-self-start d-flex m-0">
-      <NuxtLink to="/" class="title fs-3 tracking-2 text-decoration-none">
+      <NuxtLink to="/home" class="title fs-3 tracking-2 text-decoration-none">
         JOURNEY
       </NuxtLink>
     </h1>

@@ -79,7 +79,7 @@ router.post(
             message = '密碼強度太弱'
             break
           default:
-            message = '無法註冊，請稍後在試'
+            message = '無法註冊，請稍後再嘗試'
         }
 
         res.status(400).send({
