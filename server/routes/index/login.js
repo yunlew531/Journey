@@ -51,10 +51,10 @@ router.post(
     fireAuth
       .createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        console.log(userCredential.user)
-        const userRef = usersRef.doc()
-        const { id } = userRef
-        user.id = id
+        const { uid, metadata } = userCredential.user
+        const userRef = usersRef.doc(uid)
+        user.uid = uid
+        user.creationTime = Math.floor(new Date(metadata.creationTime) / 1000)
         user.authority = 'normal'
         return userRef.set(user)
       })
@@ -64,10 +64,27 @@ router.post(
           message: '已完成註冊'
         })
       })
-      .catch(() => {
+      .catch((err) => {
+        const errCode = err.code
+        let message = ''
+
+        switch (errCode) {
+          case 'auth/email-already-in-use':
+            message = '此帳號已存在'
+            break
+          case 'auth/invalid-email':
+            message = '信箱格式錯誤'
+            break
+          case 'auth/weak-password':
+            message = '密碼強度太弱'
+            break
+          default:
+            message = '無法註冊，請稍後在試'
+        }
+
         res.status(400).send({
           success: false,
-          message: '無法註冊，請稍後再嘗試'
+          message
         })
       })
   }
