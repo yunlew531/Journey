@@ -35,12 +35,13 @@ export default {
       try {
         const { data } = await apiCheckAuth()
         this.isAuth = true
-        this.uid = data.user
+        this.uid = data.uid
       } catch (err) {
         const { message } = err.response.data
         this.isAuth = false
         this.uid = ''
         this.$router.push('/login')
+        console.log(err.response.data)
         alert(message)
       }
     },

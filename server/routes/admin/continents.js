@@ -7,7 +7,7 @@ const continentsRef = firestoreDb.collection('continents')
 const checkAuth = (req, res, next) => {
   fireAuth.onAuthStateChanged((user) => {
     if (user.uid === process.env.ADMIN_UID) {
-      next()
+      return next()
     } else if (user.uid === process.env.ADMIN_READ_ONLY_UID) {
       res.status(400).send({
         success: false,

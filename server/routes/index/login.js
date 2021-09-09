@@ -163,29 +163,23 @@ router.post(
 
 router.post('/check', (req, res) => {
   const { authorization: token } = req.headers
+  const { currentUser } = fireAuth
+  const code = 400
+  let message = ''
+  const success = false
 
-  fireAuth.onAuthStateChanged((user) => {
-    if (user && user._lat !== token) {
-      res.status(400).send({
-        success: false,
-        message: '請重新登入'
-      })
-      return
-    }
+  if (!currentUser) {
+    message = '尚未登入'
+  } else if (currentUser._lat !== token) {
+    message = 'token過期，請重新登入'
+  } else {
+    message = '已登入'
+  }
 
-    if (user) {
-      console.log(user)
-      res.send({
-        success: true,
-        user,
-        message: '已登入'
-      })
-    } else {
-      res.send({
-        success: false,
-        message: '請重新登入'
-      })
-    }
+  res.status(code).send({
+    success,
+    message,
+    uid: currentUser ? currentUser.uid : ''
   })
 })
 
@@ -193,31 +187,35 @@ router.post('/admin/check', (req, res) => {
   const { authorization: token } = req.headers
   const { ADMIN_UID, ADMIN_READ_ONLY_UID } = process.env
 
-  fireAuth.onAuthStateChanged((user) => {
-    let code = 400
-    let message = ''
-    let success = false
+  const { currentUser } = fireAuth
+  let code = 400
+  let message = ''
+  let success = false
 
-    if (!user) {
-      message = '尚未登入'
-    } else if (user._lat !== token) {
-      message = 'token過期，請重新登入'
-    } else if (user.uid === ADMIN_UID || user.uid === ADMIN_READ_ONLY_UID) {
-      success = true
-      code = 200
-      message = '已登入管理員'
-      user = user.uid
-    } else if (user.uid !== ADMIN_UID || user.uid !== ADMIN_READ_ONLY_UID) {
-      message = '您的帳戶權限不足'
-    } else {
-      message = '請重新登入'
-    }
+  if (!currentUser) {
+    message = '尚未登入'
+  } else if (currentUser._lat !== token) {
+    message = 'token過期，請重新登入'
+  } else if (
+    currentUser.uid === ADMIN_UID ||
+    currentUser.uid === ADMIN_READ_ONLY_UID
+  ) {
+    success = true
+    code = 200
+    message = '已登入管理員'
+  } else if (
+    currentUser.uid !== ADMIN_UID ||
+    currentUser.uid !== ADMIN_READ_ONLY_UID
+  ) {
+    message = '您的帳戶權限不足'
+  } else {
+    message = '請重新登入'
+  }
 
-    res.status(code).send({
-      success,
-      message,
-      user
-    })
+  res.status(code).send({
+    success,
+    message,
+    uid: currentUser ? currentUser.uid : ''
   })
 })
 

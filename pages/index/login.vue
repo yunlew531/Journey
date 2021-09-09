@@ -30,7 +30,7 @@
                 <div class="input-group d-flex align-items-center">
                   <span class="material-icons text-center">mail</span>
                   <input
-                    v-model="login.email"
+                    v-model.trim="login.email"
                     type="text"
                     placeholder="請輸入信箱"
                     class="px-2"
@@ -42,7 +42,7 @@
                 <div class="input-group">
                   <span class="material-icons text-center"> vpn_key </span>
                   <input
-                    v-model="login.password"
+                    v-model.trim="login.password"
                     type="password"
                     placeholder="請輸入密碼"
                     class="px-2"
@@ -187,8 +187,8 @@ export default {
         agree: false
       },
       login: {
-        email: 'xiaomin@gmail.com',
-        password: '213456789'
+        email: '',
+        password: ''
       }
     }
   },
