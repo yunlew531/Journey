@@ -91,11 +91,20 @@ export default {
     },
     editContinent () {
       const id = this.areaSelectId
-      this.continent = {
-        title: this.continents[id].title,
-        photo: this.continents[id].photo,
-        description: this.continents[id].description,
-        content: this.continents[id].content
+      if (id) {
+        this.continent = {
+          title: this.continents[id].title,
+          photo: this.continents[id].photo,
+          description: this.continents[id].description,
+          content: this.continents[id].content
+        }
+      } else {
+        this.continent = {
+          title: '',
+          description: '',
+          content: '',
+          photo: ''
+        }
       }
     },
     async deleteContinent () {
@@ -119,8 +128,9 @@ export default {
       try {
         const continent = this.continent
         const { data } = await apiUpdateContinent(id, continent)
-        console.log(data)
+        alert(data.message)
       } catch (err) {
+        console.log(err)
         const { message } = err.response.data
         alert(message)
       }

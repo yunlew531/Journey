@@ -409,12 +409,6 @@ export default {
 }
 </script>
 
-<style>
-body::-webkit-scrollbar {
-  display: none;
-}
-</style>
-
 <style lang="scss" scoped>
 @import '@/node_modules/bootstrap/scss/functions';
 @import '@/assets/styleSheets/custom/variables';

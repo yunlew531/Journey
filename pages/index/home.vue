@@ -62,11 +62,25 @@ export default {
     return {
       continents
     }
+  },
+  destroyed () {
+    console.log(1)
+  },
+  mounted () {
+    if (this.$route.path === '/home') {
+      document.querySelector('body')
+      console.dir(document.querySelector('body'))
+    }
   }
 }
 </script>
 
+<style lang="scss"></style>
+
 <style lang="scss" scoped>
+body::-webkit-scrollbar {
+  display: none;
+}
 @import '@/assets/styleSheets/custom/variables';
 
 .journey-text {

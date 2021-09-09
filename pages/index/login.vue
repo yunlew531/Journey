@@ -20,15 +20,21 @@
               v-if="status === 'login'"
               class="notice text-white position-absolute"
             >
-              "管理員頁面唯讀權限" 帳號。帳號: xxx 密碼: xxx<br>
-              另外也可註冊個人帳號，確保擁有獨立購物車、訂單。但無法進入查看管理頁面。
+              "管理員頁面唯讀權限" 帳號。帳號: adminreadonly@gmail.com 密碼:
+              000000<br>
+              另外也可註冊個人帳號，確保擁有獨立購物車、訂單。p.s.無查看管理頁面權限。
             </p>
             <div v-if="status === 'login'" class="rounded shadow-sm p-12 mb-5">
               <label class="d-block mb-3">
                 <span class="d-block mb-1">信箱</span>
                 <div class="input-group d-flex align-items-center">
                   <span class="material-icons text-center">mail</span>
-                  <input type="text" placeholder="請輸入信箱" class="px-2">
+                  <input
+                    v-model="login.email"
+                    type="text"
+                    placeholder="請輸入信箱"
+                    class="px-2"
+                  >
                 </div>
               </label>
               <label class="d-block mb-3">
@@ -36,6 +42,7 @@
                 <div class="input-group">
                   <span class="material-icons text-center"> vpn_key </span>
                   <input
+                    v-model="login.password"
                     type="password"
                     placeholder="請輸入密碼"
                     class="px-2"
@@ -45,6 +52,7 @@
               <button
                 type="button"
                 class="w-100 btn btn-dark text-white py-2 mt-5"
+                @click="loginAccount"
               >
                 登入
               </button>
@@ -110,14 +118,16 @@
                   >
                 </div>
               </label>
-              <label class="cursor-pointer d-flex align-items-center mt-3">
+              <label
+                class="cursor-pointer d-inline-flex align-items-center mt-3"
+              >
                 <input
                   v-model="register.agree"
                   type="checkbox"
                   class="align-self-start mt-1 me-2"
                 >
                 <span class="text-danger">
-                  我了解本網站為個人作品集網站、非真實營利網站。<br>
+                  我了解本網站為個人作品集網站，非真實營利網站。<br>
                   所有商品、訂單皆為虛構，下標後也不會收到任何東西。
                 </span>
               </label>
@@ -162,7 +172,7 @@
 </template>
 
 <script>
-import { apiRegister } from '@/api'
+import { apiRegister, apiLogin } from '@/api'
 
 export default {
   data () {
@@ -175,6 +185,10 @@ export default {
         phone: '',
         address: '',
         agree: false
+      },
+      login: {
+        email: 'xiaomin@gmail.com',
+        password: '213456789'
       }
     }
   },
@@ -191,6 +205,22 @@ export default {
       try {
         const { data } = await apiRegister(user)
         alert(data.message)
+      } catch (err) {
+        const { message } = err.response.data
+        alert(message)
+      }
+    },
+    async loginAccount () {
+      try {
+        const { data } = await apiLogin(this.login)
+        const { message, user } = data
+
+        document.cookie = `Journey=${user.token};expires=${new Date(
+          Date.now() + 60 * 60 * 24 * 5 * 1000
+        )};`
+
+        alert(message)
+        this.$router.push('/admin/continents')
       } catch (err) {
         const { message } = err.response.data
         alert(message)

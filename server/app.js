@@ -5,11 +5,11 @@ require('dotenv').config()
 // router "/"
 const homeRouter = require('./routes/index/home')
 const loginRouter = require('./routes/index/login')
-const adminContinentsRouter = require('./routes/admin/continents')
 
 // router "/member"
 
 // router "/admin"
+const adminContinentsRouter = require('./routes/admin/continents')
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

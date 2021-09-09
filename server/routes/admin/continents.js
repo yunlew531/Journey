@@ -1,11 +1,30 @@
 const express = require('express')
 const router = express.Router()
 const { body, validationResult } = require('express-validator')
-const { firestoreDb } = require('../../connections/firebase_connect')
+const { firestoreDb, fireAuth } = require('../../connections/firebase_connect')
 const continentsRef = firestoreDb.collection('continents')
+
+const checkAuth = (req, res, next) => {
+  fireAuth.onAuthStateChanged((user) => {
+    if (user.uid === process.env.ADMIN_UID) {
+      next()
+    } else if (user.uid === process.env.ADMIN_READ_ONLY_UID) {
+      res.status(400).send({
+        success: false,
+        message: '此帳戶僅有唯讀功能'
+      })
+    } else {
+      res.status(400).send({
+        success: false,
+        message: '此帳戶無此權限'
+      })
+    }
+  })
+}
 
 router.post(
   '/create',
+  checkAuth,
   body('title')
     .notEmpty()
     .withMessage('請檢查標題是否空白')
@@ -65,6 +84,7 @@ router.post(
 
 router.post(
   '/update/:id',
+  checkAuth,
   body('title')
     .notEmpty()
     .withMessage('請檢查標題是否空白')
@@ -137,7 +157,7 @@ router.post(
   }
 )
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', checkAuth, (req, res) => {
   const { id } = req.params
 
   continentsRef
