@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { body, validationResult } = require('express-validator')
+const jwt = require('jsonwebtoken')
 const { firestoreDb, fireAuth } = require('../../connections/firebase_connect')
 const usersRef = firestoreDb.collection('users')
 
@@ -119,7 +120,15 @@ router.post(
       .signInWithEmailAndPassword(email, password)
       .then((UserCredential) => {
         const { user } = UserCredential
-        const { _lat: token, uid } = user
+        const { uid } = user
+
+        const payload = {
+          uid,
+          email
+        }
+        const token = jwt.sign(payload, process.env.JWT_PRIVATE_KEY, {
+          expiresIn: '7 days'
+        })
 
         res.send({
           success: true,
@@ -163,60 +172,85 @@ router.post(
 
 router.post('/check', (req, res) => {
   const { authorization: token } = req.headers
-  const { currentUser } = fireAuth
-  const code = 400
-  let message = ''
-  const success = false
 
-  if (!currentUser) {
-    message = '尚未登入'
-  } else if (currentUser._lat !== token) {
-    message = 'token過期，請重新登入'
-  } else {
-    message = '已登入'
+  try {
+    jwt.verify(token, process.env.JWT_PRIVATE_KEY)
+
+    res.send({
+      success: true,
+      message: '成功登入'
+    })
+  } catch (err) {
+    const { message: errMsg } = err
+    console.log(errMsg)
+    const code = 400
+    const message = ''
+
+    switch (errMsg) {
+      case 'jwt must be provided':
+        message = 'token 不存在，請檢查 header 是否夾帶'
+        break
+      case 'jwt expired':
+        message = 'token 過期，請重新登入'
+        break
+      case 'jwt malformed':
+        message = 'token 格式有誤'
+        break
+      default:
+        message = '請重新登入'
+    }
+
+    res.status(code).send({
+      success: false,
+      message
+    })
   }
-
-  res.status(code).send({
-    success,
-    message,
-    uid: currentUser ? currentUser.uid : ''
-  })
 })
 
 router.post('/admin/check', (req, res) => {
   const { authorization: token } = req.headers
   const { ADMIN_UID, ADMIN_READ_ONLY_UID } = process.env
 
-  const { currentUser } = fireAuth
-  let code = 400
-  let message = ''
-  let success = false
+  try {
+    const { uid } = jwt.verify(token, process.env.JWT_PRIVATE_KEY)
 
-  if (!currentUser) {
-    message = '尚未登入'
-  } else if (currentUser._lat !== token) {
-    message = 'token過期，請重新登入'
-  } else if (
-    currentUser.uid === ADMIN_UID ||
-    currentUser.uid === ADMIN_READ_ONLY_UID
-  ) {
-    success = true
-    code = 200
-    message = '已登入管理員'
-  } else if (
-    currentUser.uid !== ADMIN_UID ||
-    currentUser.uid !== ADMIN_READ_ONLY_UID
-  ) {
-    message = '您的帳戶權限不足'
-  } else {
-    message = '請重新登入'
+    if (uid === ADMIN_UID || uid === ADMIN_READ_ONLY_UID) {
+      res.send({
+        success: true,
+        message: '已登入管理員',
+        uid
+      })
+    } else {
+      throw new Error('not admin')
+    }
+  } catch (err) {
+    const { message: errMsg } = err
+    const code = 400
+    let message = ''
+
+    switch (errMsg) {
+      case 'jwt must be provided':
+        message = 'token 不存在，請檢查 header 是否夾帶'
+        break
+      case 'jwt expired':
+        message = 'token 過期，請重新登入'
+        break
+      case 'jwt malformed':
+        message = 'token 格式有誤'
+        break
+      case 'not admin':
+        message = '您的帳戶權限不足'
+        break
+      default:
+        message = '請重新登入'
+    }
+
+    res.status(code).send({
+      success: false,
+      message,
+      uid: ''
+    })
   }
-
-  res.status(code).send({
-    success,
-    message,
-    uid: currentUser ? currentUser.uid : ''
-  })
 })
 
 router.post('/signOut', (req, res) => {

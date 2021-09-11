@@ -1,6 +1,6 @@
 <template>
   <section style="height: 200vh;">
-    1
+    continents
   </section>
 </template>
 

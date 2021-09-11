@@ -82,7 +82,7 @@ export default {
     },
     async createContinent () {
       try {
-        const { data } = await apiCreateContinent()
+        const { data } = await apiCreateContinent(this.continent)
         alert(data.message)
       } catch (err) {
         const { message } = err.response.data

@@ -41,7 +41,6 @@ export default {
         this.isAuth = false
         this.uid = ''
         this.$router.push('/login')
-        console.log(err.response.data)
         alert(message)
       }
     },

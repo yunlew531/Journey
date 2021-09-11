@@ -4,10 +4,22 @@
       class="continent-list list-unstyled d-flex flex-nowrap overflow-hidden mb-0"
     >
       <li
-        v-for="continent in continents.data"
+        v-for="(continent, key) in continents.data"
         :key="continent.id"
         class="continent position-relative"
       >
+        <p
+          class="overflow-hidden tracking-3 fs-2 text-white position-absolute end-0 bottom-0 mb-5 me-12 z-10"
+        >
+          <span class="continent-quantity">
+            {{ key + 1 &lt; 10 ? `0${key + 1}` : key + 1 }} /
+            {{
+              continents.data.length &lt; 10
+                ? `0${continents.data.length}`
+                : continents.data.length
+            }}
+          </span>
+        </p>
         <div class="continent-panel-bg position-absolute w-100 overflow-hidden">
           <img
             :src="continent.photo"
@@ -123,6 +135,9 @@ export default {
               )
               const wave = targetSectionEl.querySelector('.wave-panel')
               const moreBtn = targetSectionEl.querySelector('.more-btn')
+              const continentQty = targetSectionEl.querySelector(
+                '.continent-quantity'
+              )
 
               this.timelines[key]
                 .addLabel('start', '+=0.5')
@@ -139,7 +154,7 @@ export default {
                   },
                   'start'
                 )
-                .addLabel('waveEnd')
+                .addLabel('wave end')
                 .to(moreBtn, {
                   duration: 0.5,
                   scale: 1
@@ -151,7 +166,16 @@ export default {
                     opacity: 1,
                     duration: 1
                   },
-                  'waveEnd'
+                  'wave end'
+                )
+                .to(
+                  continentQty,
+                  {
+                    duration: 1,
+                    y: 0,
+                    autoAlpha: 1
+                  },
+                  'wave end'
                 )
                 .to(
                   tourContentEl,
@@ -171,14 +195,14 @@ export default {
                     duration: 1,
                     y: 0
                   },
-                  'waveEnd'
+                  'wave end'
                 )
                 .to(
                   wave,
                   {
                     duration: 1
                   },
-                  'waveEnd'
+                  'wave end'
                 )
                 .fromTo(
                   bgPhotoEl,
@@ -189,7 +213,7 @@ export default {
                     duration: 5,
                     filter: 'brightness(1)'
                   },
-                  'waveEnd'
+                  'wave end'
                 )
             },
             onEnterBack: (process) => {
@@ -205,6 +229,9 @@ export default {
               )
               const bgPhotoEl = targetSectionEl.querySelector('.bg-photo')
               const moreBtn = targetSectionEl.querySelector('.more-btn')
+              const continentQty = targetSectionEl.querySelector(
+                '.continent-quantity'
+              )
 
               this.timelines[key]
                 .to(bgPhotoEl, {
@@ -220,9 +247,9 @@ export default {
                     duration: 1,
                     width: '500px'
                   },
-                  '+=0.3'
+                  '+=0.5'
                 )
-                .addLabel('content-start')
+                .addLabel('content start')
                 .fromTo(
                   titleEl,
                   {
@@ -234,7 +261,7 @@ export default {
                     y: 0,
                     opacity: 1
                   },
-                  'content-start'
+                  'content start'
                 )
                 .fromTo(
                   continentTitleEl,
@@ -245,7 +272,7 @@ export default {
                     duration: 1,
                     y: 0
                   },
-                  'content-start'
+                  'content start'
                 )
                 .to(
                   moreBtn,
@@ -253,7 +280,16 @@ export default {
                     duration: 0.5,
                     scale: 1
                   },
-                  'content-start'
+                  'content start'
+                )
+                .to(
+                  continentQty,
+                  {
+                    duration: 1,
+                    y: 0,
+                    autoAlpha: 1
+                  },
+                  'content start'
                 )
                 .fromTo(
                   tourContentEl,
@@ -278,6 +314,9 @@ export default {
                 '.tour-content'
               )
               const moreBtn = targetSectionEl.querySelector('.more-btn')
+              const continentQty = targetSectionEl.querySelector(
+                '.continent-quantity'
+              )
 
               this.timelines[key]
                 .addLabel('start')
@@ -295,6 +334,15 @@ export default {
                     duration: 1,
                     y: '100%',
                     opacity: 0
+                  },
+                  'start'
+                )
+                .to(
+                  continentQty,
+                  {
+                    duration: 1,
+                    y: 100,
+                    autoAlpha: 0
                   },
                   'start'
                 )
@@ -333,6 +381,9 @@ export default {
                 '.tour-content'
               )
               const moreBtn = targetSectionEl.querySelector('.more-btn')
+              const continentQty = targetSectionEl.querySelector(
+                '.continent-quantity'
+              )
 
               this.timelines[key]
                 .addLabel('start')
@@ -349,6 +400,15 @@ export default {
                     duration: 0.2,
                     y: '100%',
                     opacity: 0
+                  },
+                  'start'
+                )
+                .to(
+                  continentQty,
+                  {
+                    duration: 0.2,
+                    y: 100,
+                    autoAlpha: 0
                   },
                   'start'
                 )
@@ -397,8 +457,7 @@ export default {
         })
       )
     },
-    /* eslint-disable */
-    directionalSnap(increment) {
+    directionalSnap (increment) {
       const snapFunc = gsap.utils.snap(increment)
       return (raw, self) => {
         const n = snapFunc(raw)
@@ -529,5 +588,10 @@ export default {
 }
 .continent-content {
   height: 450px;
+}
+.continent-quantity {
+  display: block;
+  transform: translateY(100%);
+  font-family: $font-family-sans-narrow;
 }
 </style>

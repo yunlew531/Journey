@@ -23,6 +23,7 @@
     "fibers": "^5.0.0",
     "firebase": "^8.10.0",
     "gsap": "^3.7.1",
+    "jsonwebtoken": "^8.5.1",
     "nuxt": "^2.15.7",
     "nuxt-material-design-icons": "^1.0.4",
     "sass": "^1.38.0",

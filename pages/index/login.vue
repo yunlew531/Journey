@@ -216,7 +216,7 @@ export default {
         const { message, user } = data
 
         document.cookie = `Journey=${user.token};expires=${new Date(
-          Date.now() + 60 * 60 * 24 * 5 * 1000
+          Date.now() + 60 * 60 * 24 * 7 * 1000
         )};`
 
         alert(message)
