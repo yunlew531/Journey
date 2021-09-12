@@ -24,7 +24,7 @@
           <img
             :src="continent.photo"
             :alt="continent.title"
-            class="bg-photo h-100"
+            class="bg-photo h-100 position-absolute"
           >
           <div class="wave-panel position-absolute">
             <div class="wave position-absolute" />
@@ -510,6 +510,8 @@ export default {
 }
 .bg-photo {
   filter: brightness(0);
+  width: calc(100% - 500px);
+  right: 0;
 }
 .wave-panel {
   height: 100%;

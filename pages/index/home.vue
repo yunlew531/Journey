@@ -34,17 +34,25 @@
         </div>
       </div>
     </section>
+    <section class="py-50 bg-warning">
+      <p class="py-50">
+        開發中
+      </p>
+    </section>
+    <PhotoWall />
     <Area :continents="continents" />
   </div>
 </template>
 
 <script>
-import Area from '@/components/frontend/index/area.vue'
+import Area from '@/components/index/home/area.vue'
+import PhotoWall from '@/components/index/home/photoWall.vue'
 import { apiGetContinents } from '@/api'
 
 export default {
   components: {
-    Area
+    Area,
+    PhotoWall
   },
   async asyncData () {
     let continents = {}
@@ -57,7 +65,9 @@ export default {
         photo,
         currentContinentIdx: 0
       }
-    } catch (err) {}
+    } catch (err) {
+      alert('網站維護中')
+    }
 
     return {
       continents
@@ -66,12 +76,7 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
-
 <style lang="scss" scoped>
-body::-webkit-scrollbar {
-  display: none;
-}
 @import '@/assets/styleSheets/custom/variables';
 
 .journey-text {

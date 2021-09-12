@@ -182,8 +182,6 @@ router.post('/check', (req, res) => {
     })
   } catch (err) {
     const { message: errMsg } = err
-    console.log(errMsg)
-    const code = 400
     const message = ''
 
     switch (errMsg) {
@@ -200,7 +198,7 @@ router.post('/check', (req, res) => {
         message = '請重新登入'
     }
 
-    res.status(code).send({
+    res.status(400).send({
       success: false,
       message
     })
@@ -225,7 +223,6 @@ router.post('/admin/check', (req, res) => {
     }
   } catch (err) {
     const { message: errMsg } = err
-    const code = 400
     let message = ''
 
     switch (errMsg) {
@@ -245,7 +242,7 @@ router.post('/admin/check', (req, res) => {
         message = '請重新登入'
     }
 
-    res.status(code).send({
+    res.status(400).send({
       success: false,
       message,
       uid: ''

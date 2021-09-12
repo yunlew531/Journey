@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import Header from '@/components/frontend/header.vue'
-import Footer from '@/components/frontend/footer.vue'
+import Header from '@/components/index/header.vue'
+import Footer from '@/components/index/footer.vue'
 
 export default {
   components: {
@@ -22,6 +22,7 @@ export default {
       return redirect('/home')
     }
   },
+
   mounted () {
     this.checkEnvVariable()
   },

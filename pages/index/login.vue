@@ -46,6 +46,7 @@
                     type="password"
                     placeholder="請輸入密碼"
                     class="px-2"
+                    @keyup.enter="loginAccount"
                   >
                 </div>
               </label>
@@ -205,6 +206,7 @@ export default {
       try {
         const { data } = await apiRegister(user)
         alert(data.message)
+        this.$router.go()
       } catch (err) {
         const { message } = err.response.data
         alert(message)
