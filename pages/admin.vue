@@ -13,9 +13,6 @@ import backReq from '@/api/backReq'
 import { apiSignOut, apiCheckAuth } from '@/api'
 
 export default {
-  middleware ({ redirect }) {
-    redirect('/admin/continents')
-  },
   data () {
     return {
       isAuth: false,
