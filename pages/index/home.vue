@@ -34,48 +34,35 @@
         </div>
       </div>
     </section>
-    <section
-      class="introduce-panel d-flex flex-column align-items-center py-50"
-    >
-      <h2 class="introduce-title tracking-3 display-3 mb-10">
-        JOURNEY
-      </h2>
-      <p class="fs-4">
-        體驗豐富的旅行，解鎖新的知識。
-      </p>
-      <p class="fs-4">
-        融入當地的文化 —— 更好地了解世界。
-      </p>
-      <div class="introduce-panel-numbers d-flex py-10">
-        <p class="fs-4 px-10">
-          會員成長
-          <span class="fs-1 ms-1 text-danger">{{ numbers.membersGrow }} +</span>
-        </p>
-        <p class="fs-4 px-10">
-          賣出數量
-          <span class="fs-1 ms-1 text-danger">{{ numbers.salesQty }} +</span>
-        </p>
-        <p class="fs-4 px-10">
-          回購率
-          <span class="fs-1 ms-1 text-danger">{{ numbers.repurchase }} %</span>
-        </p>
+    <div class="position-relative overflow-hidden">
+      <Introduce />
+      <PhotoWall />
+      <div class="globe w-100">
+        <img
+          class="mountain-img position-absolute start-0"
+          src="@/assets/images/mountain.png"
+          alt="mountain"
+        >
       </div>
-    </section>
-    <PhotoWall />
+    </div>
     <Area :continents="continents" />
   </div>
 </template>
 
 <script>
 import { gsap } from 'gsap'
-import Area from '@/components/index/home/area.vue'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import Introduce from '@/components/index/home/introduce.vue'
 import PhotoWall from '@/components/index/home/photoWall.vue'
+import Area from '@/components/index/home/area.vue'
 import { apiGetContinents } from '@/api'
 
+gsap.registerPlugin(ScrollTrigger)
 export default {
   components: {
-    Area,
-    PhotoWall
+    Introduce,
+    PhotoWall,
+    Area
   },
   async asyncData () {
     let continents = {}
@@ -96,119 +83,31 @@ export default {
       continents
     }
   },
-  data () {
-    return {
-      numbers: {
-        membersGrow: 0,
-        repurchase: 0,
-        salesQty: 0
-      }
-    }
-  },
   mounted () {
-    this.setScrollTrigger()
-  },
-  methods: {
-    setScrollTrigger () {
-      const numbers = {
-        membersGrow: 0,
-        repurchase: 0,
-        salesQty: 0
-      }
-      const snap = gsap.utils.snap(1)
+    const mountainTween = gsap.to('.mountain-img', {
+      y: 0,
+      duration: 1
+    })
+    mountainTween.pause()
 
-      const membersGrowTween = gsap.to(numbers, {
-        ease: 'power4',
-        onUpdate: () => {
-          const { membersGrow } = numbers
-          this.numbers.membersGrow = snap(membersGrow)
-        },
-        membersGrow: 500,
-        duration: 6,
-        scrollTrigger: {
-          trigger: '.introduce-panel-numbers',
-          end: () => '+=100%',
-          onEnter: () => {
-            membersGrowTween.restart()
-          },
-          onLeave: () => {
-            membersGrowTween.restart().pause()
-          },
-          onEnterBack: () => {
-            membersGrowTween.restart()
-          },
-          onLeaveBack: () => {
-            membersGrowTween.restart().pause()
-          }
-        }
-      })
-      membersGrowTween.pause()
-
-      const salesQtyTween = gsap.to(numbers, {
-        ease: 'power4',
-        onUpdate: () => {
-          const { salesQty } = numbers
-          this.numbers.salesQty = snap(salesQty)
-        },
-        salesQty: 6500,
-        duration: 6,
-        delay: 1.5,
-        scrollTrigger: {
-          trigger: '.introduce-panel-numbers',
-          end: () => '+=100%',
-          onEnter: () => {
-            salesQtyTween.restart(true)
-          },
-          onLeave: () => {
-            salesQtyTween.restart().pause()
-          },
-          onEnterBack: () => {
-            salesQtyTween.restart(true)
-          },
-          onLeaveBack: () => {
-            salesQtyTween.restart().pause()
-          }
-        }
-      })
-      salesQtyTween.pause()
-
-      const repurchaseTween = gsap.to(numbers, {
-        ease: 'power4',
-        onUpdate: () => {
-          const { repurchase } = numbers
-          this.numbers.repurchase = snap(repurchase)
-        },
-        repurchase: 80,
-        duration: 8,
-        delay: 3,
-        scrollTrigger: {
-          trigger: '.introduce-panel-numbers',
-          end: () => '+=100%',
-          onEnter: () => {
-            repurchaseTween.restart(true)
-          },
-          onLeave: () => {
-            repurchaseTween.restart().pause()
-          },
-          onEnterBack: () => {
-            repurchaseTween.restart(true)
-          },
-          onLeaveBack: () => {
-            repurchaseTween.restart().pause()
-          }
-        }
-      })
-      repurchaseTween.pause()
-
-      gsap.to('.introduce-panel', {
-        y: -200,
-        scrollTrigger: {
-          trigger: '.introduce-panel-numbers',
-          start: () => '-=300',
-          scrub: 1.5
-        }
-      })
-    }
+    ScrollTrigger.create({
+      trigger: '.globe',
+      start: 'top top',
+      end: '+=2500',
+      pin: true,
+      onEnter: () => mountainTween.restart(),
+      onLeaveBack: () => mountainTween.reverse(),
+      onLeave: () =>
+        gsap.to('.globe', {
+          filter: 'brightness(0)',
+          duration: 1
+        }),
+      onEnterBack: () =>
+        gsap.to('.globe', {
+          filter: 'brightness(1)',
+          duration: 1
+        })
+    })
   }
 }
 </script>
@@ -320,7 +219,18 @@ export default {
     opacity: 0;
   }
 }
-.introduce-title {
-  font-family: $font-family-sans-narrow;
+.globe {
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url('@/assets/images/sky-up-1.jpg') center no-repeat;
+  background-size: cover;
+  transform: scaleY(1.1);
+  > .mountain-img {
+    bottom: 0;
+    transform: translateY(100%);
+  }
+  filter: brightness(1);
 }
 </style>

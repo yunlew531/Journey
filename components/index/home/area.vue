@@ -74,7 +74,8 @@ export default {
     return {
       maxWidth: 0,
       sections: [],
-      timelines: []
+      timelines: [],
+      canSnap: false
     }
   },
   mounted () {
@@ -149,7 +150,7 @@ export default {
                   },
                   {
                     width: '500px',
-                    duration: 2,
+                    duration: 1,
                     x: 0
                   },
                   'start'
@@ -369,6 +370,7 @@ export default {
                 )
             },
             onLeaveBack: (process) => {
+              this.canSnap = false
               this.timelines[key].clear()
               const targetSectionEl = process.trigger
               const titleEl = targetSectionEl.querySelector('.title')
@@ -461,7 +463,12 @@ export default {
       const snapFunc = gsap.utils.snap(increment)
       return (raw, self) => {
         const n = snapFunc(raw)
-        return self.direction < 0 ? n - increment : n + increment
+        if (!this.canSnap) {
+          this.canSnap = true
+          return n
+        } else {
+          return self.direction < 0 ? n - increment : n + increment
+        }
       }
     }
   }

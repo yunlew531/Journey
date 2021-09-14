@@ -1,7 +1,7 @@
 <template>
   <section class="photo-wall-panel position-relative">
     <ul
-      class="front-photos d-flex flex-wrap justify-content-between list-unstyled position-relative"
+      class="front-photos d-flex flex-wrap z-20 justify-content-between list-unstyled position-relative"
     >
       <li
         v-for="photo in frontPhotos"
@@ -16,7 +16,7 @@
       </li>
     </ul>
     <ul
-      class="back-photos position-absolute start-50 d-flex flex-wrap flex-column list-unstyled"
+      class="back-photos position-absolute start-50 z-10 d-flex flex-wrap flex-column list-unstyled"
     >
       <li v-for="photo in backPhotos" :key="photo" class="photo-back">
         <img
