@@ -5,6 +5,7 @@ require('dotenv').config()
 // router "/"
 const homeRouter = require('./routes/index/home')
 const loginRouter = require('./routes/index/login')
+const photoRouter = require('./routes/admin/photo')
 
 // router "/member"
 
@@ -18,5 +19,6 @@ app.use('/', homeRouter)
 app.use('/login', loginRouter)
 
 app.use('/admin/continents', adminContinentsRouter)
+app.use('/admin/photo', photoRouter)
 
 module.exports = app

@@ -5,6 +5,7 @@ import {
   updateContinent
 } from './backend/continents'
 import { signOut, checkAuth } from './backend/others'
+import { upLoadImg } from './backend/photo-wall-manage'
 
 // frontend
 export const apiGetContinents = getContinents
@@ -17,3 +18,4 @@ export const apiDeleteContinent = deleteContinent
 export const apiUpdateContinent = updateContinent
 export const apiSignOut = signOut
 export const apiCheckAuth = checkAuth
+export const apiUpLoadImg = upLoadImg

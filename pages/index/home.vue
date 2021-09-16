@@ -40,7 +40,7 @@
       <div class="globe w-100">
         <img
           class="mountain-img position-absolute start-0"
-          src="@/assets/images/mountain.png"
+          src="@/assets/images/desert.png"
           alt="mountain"
         >
       </div>
