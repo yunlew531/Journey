@@ -250,7 +250,7 @@ router.post('/admin/check', (req, res) => {
   }
 })
 
-router.post('/signOut', (req, res) => {
+router.post('/sign-out', (req, res) => {
   fireAuth
     .signOut()
     .then(() => {

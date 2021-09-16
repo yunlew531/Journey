@@ -6,7 +6,7 @@ const {
   fireStorage,
   firestoreDb
 } = require('../../connections/firebase_connect')
-const photoWallRef = firestoreDb.collection('photo_wall')
+const photoWallRef = firestoreDb.collection('photos_wall')
 
 router.post('/upload', upload.single('img-file'), (req, res) => {
   const imgFile = req.file
@@ -21,8 +21,8 @@ router.post('/upload', upload.single('img-file'), (req, res) => {
     return
   }
 
-  const photoWallStorageRef = fireStorage.ref('/photo_wall')
-  const imgRef = photoWallStorageRef.child(req.file.originalname)
+  const photoWallStorageRef = fireStorage.ref('/photos_wall')
+  const imgRef = photoWallStorageRef.child(`photo-${index}`)
 
   let imgUrl = ''
   imgRef

@@ -1,17 +1,18 @@
-import { getContinents, register, login } from './frontend'
+import { getContinents, register, login, getPhotosWall } from './frontend/home'
 import {
   createContinent,
   deleteContinent,
   updateContinent
 } from './dashboard/continents'
 import { signOut, checkAuth } from './dashboard/others'
-import { upLoadImg } from './dashboard/photo-wall-manage'
+import { upLoadImg } from './dashboard/photo-wall'
 
 // frontend
 export const apiGetContinents = getContinents
 export const apiRegister = register
 export const apiLogin = login
 export const apiSignOut = signOut
+export const apiGetPhotosWall = getPhotosWall
 
 // backend
 export const apiCheckAuth = checkAuth

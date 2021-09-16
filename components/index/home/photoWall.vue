@@ -8,11 +8,7 @@
         :key="photo"
         class="photo-front bg-transparent"
       >
-        <img
-          class="shadow-lg mx-auto rounded"
-          src="https://images.unsplash.com/photo-1524946274118-e7680e33ccc5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
-          alt=""
-        >
+        <img class="shadow-lg mx-auto rounded" :src="photo" :alt="photo">
       </li>
     </ul>
     <ul
@@ -32,15 +28,19 @@
 <script>
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { apiGetPhotosWall } from '@/api'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default {
   data () {
     return {
-      frontPhotos: 18,
-      backPhotos: 10
+      frontPhotos: [],
+      backPhotos: []
     }
+  },
+  created () {
+    this.getPhotos()
   },
   mounted () {
     this.setScrollTrigger()
@@ -62,6 +62,33 @@ export default {
           scrub: 1.5
         }
       })
+    },
+    async getPhotos () {
+      const frontPhotos = new Array(18).fill()
+      const backPhotos = new Array(10).fill()
+
+      try {
+        const { data } = await apiGetPhotosWall()
+        const frontPhotosKeys = Object.keys(data.photos.front_photos)
+        const frontPhotosValues = Object.values(data.photos.front_photos)
+        const frontIndexArr = frontPhotosKeys.map(photo =>
+          photo.split('-').pop()
+        )
+        frontIndexArr.forEach((idx, key) => {
+          frontPhotos[idx] = frontPhotosValues[key]
+        })
+        this.frontPhotos = frontPhotos
+
+        const backPhotosKeys = Object.keys(data.photos.back_photos)
+        const backPhotosValues = Object.values(data.photos.back_photos)
+        const backIndexArr = backPhotosKeys.map(photo => photo.split('-').pop())
+        backIndexArr.forEach((idx, key) => {
+          backPhotos[idx] = backPhotosValues[key]
+        })
+        this.backPhotos = backPhotos
+      } catch (err) {
+        alert(err.response.data.message)
+      }
     }
   }
 }

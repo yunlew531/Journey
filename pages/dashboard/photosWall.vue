@@ -16,12 +16,11 @@
         <img :src="url" class="position-absolute w-100 h-100">
       </li>
     </ul>
-    <p>1</p>
   </section>
 </template>
 
 <script>
-import { apiUpLoadImg } from '@/api'
+import { apiUpLoadImg, apiGetPhotosWall } from '@/api'
 
 export default {
   data () {
@@ -31,6 +30,7 @@ export default {
   },
   created () {
     this.frontImgsUrl = new Array(18).fill()
+    this.getPhotos()
   },
   methods: {
     async upLoadImg (key, event) {
@@ -41,6 +41,19 @@ export default {
       try {
         const { data } = await apiUpLoadImg(formData)
         this.$set(this.frontImgsUrl, key, data.imgUrl)
+      } catch (err) {
+        alert(err.response.data.message)
+      }
+    },
+    async getPhotos () {
+      try {
+        const { data } = await apiGetPhotosWall()
+        const frontPhotosKeys = Object.keys(data.photos.front_photos)
+        const frontPhotosValues = Object.values(data.photos.front_photos)
+        const indexArr = frontPhotosKeys.map(photo => photo.split('-').pop())
+        indexArr.forEach((idx, key) => {
+          this.$set(this.frontImgsUrl, idx, frontPhotosValues[key])
+        })
       } catch (err) {
         alert(err.response.data.message)
       }
