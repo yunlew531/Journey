@@ -1,57 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const { body, validationResult } = require('express-validator')
-const jwt = require('jsonwebtoken')
 const { firestoreDb } = require('../../connections/firebase_connect')
 const continentsRef = firestoreDb.collection('continents')
 
-const checkAuth = (req, res, next) => {
-  const { authorization: token } = req.headers
-
-  try {
-    const { uid } = jwt.verify(token, process.env.JWT_PRIVATE_KEY)
-
-    if (uid === process.env.ADMIN_UID) {
-      next()
-    } else if (uid === process.env.ADMIN_READ_ONLY_UID) {
-      throw new Error('read only')
-    } else {
-      throw new Error('permission denied')
-    }
-  } catch (err) {
-    const { message: errMsg } = err
-    let message = ''
-
-    switch (errMsg) {
-      case 'jwt must be provided':
-        message = 'token 不存在，請檢查 header 是否夾帶'
-        break
-      case 'jwt expired':
-        message = 'token 過期，請重新登入'
-        break
-      case 'read only':
-        message = '此帳戶僅有唯讀功能'
-        break
-      case 'permission denied':
-        message = '此帳戶無此權限'
-        break
-      case 'jwt malformed':
-        message = 'token 格式有誤'
-        break
-      default:
-        message = '請重新登入'
-    }
-
-    res.status(400).send({
-      success: false,
-      message
-    })
-  }
-}
-
 router.post(
   '/create',
-  checkAuth,
   body('title')
     .notEmpty()
     .withMessage('請檢查標題是否空白')
@@ -111,7 +65,6 @@ router.post(
 
 router.post(
   '/update/:id',
-  checkAuth,
   body('title')
     .notEmpty()
     .withMessage('請檢查標題是否空白')
@@ -184,7 +137,7 @@ router.post(
   }
 )
 
-router.delete('/:id', checkAuth, (req, res) => {
+router.delete('/:id', (req, res) => {
   const { id } = req.params
 
   continentsRef

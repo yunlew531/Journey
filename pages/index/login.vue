@@ -222,7 +222,7 @@ export default {
         )};`
 
         alert(message)
-        this.$router.push('/admin/continents')
+        this.$router.push('/dashboard/continents')
       } catch (err) {
         const { message } = err.response.data
         alert(message)
